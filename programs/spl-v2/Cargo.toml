@@ -1,0 +1,25 @@
+[package]
+name = "spl-v2"
+version = "0.1.0"
+description = "Convert spl token to V2"
+authors = ["Nam Duong Duc <contact@namdd.dev>"]
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "spl_v2"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[profile.release]
+overflow-checks = true
+
+[dependencies]
+anchor-lang = "0.24.2"
+anchor-spl = "0.24.2"
+mpl-token-metadata = { version="1.2.10", features = [ "no-entrypoint" ] }

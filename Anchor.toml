@@ -1,0 +1,16 @@
+[features]
+seeds = false
+[programs.localnet]
+spl_v2 = "ASau1EwV3BS1QgrhNtfw9Zwv5TitMFp93fdzmXu8o66u"
+[programs.devnet]
+spl_v2 = "ASau1EwV3BS1QgrhNtfw9Zwv5TitMFp93fdzmXu8o66u"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "devnet"
+wallet = "/Users/doubled/.config/solana/devnet.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
