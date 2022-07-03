@@ -11,7 +11,7 @@ import * as spl from "@solana/spl-token";
 import { Account, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PROGRAM_ID as METAPLEX_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
 import { assert } from "chai";
-import { getMetadata } from "../helper/metadata.helper";
+import { getMetadataAddress, getMetadata } from "../helpers/metadata.helper";
 
 describe("spl-v2", () => {
   // Configure the client to use the local cluster.
@@ -60,7 +60,7 @@ describe("spl-v2", () => {
       program.programId
     );
 
-    const metadataAddress = await getMetadata(splV2Address);
+    const metadataAddress = await getMetadataAddress(splV2Address);
 
     await program.methods
       .createSplV2(
@@ -90,6 +90,12 @@ describe("spl-v2", () => {
       splV2Mint,
       wallet.publicKey
     );
+
+    const metadata = await getMetadata(
+      anchor.getProvider().connection,
+      splV2Mint
+    );
+    console.log("Metadata", metadata);
   });
 
   it("SwapSpl", async () => {
