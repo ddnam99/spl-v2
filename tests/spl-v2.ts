@@ -60,15 +60,15 @@ describe("spl-v2", () => {
       program.programId
     );
 
+    const name = "SPL V2 TOKEN";
+    const symbol = "SPLV2";
+    const uri =
+      "https://arweave.net/OwXDf7SM6nCVY2cvQ4svNjtV7WBTz3plbI4obN9JNkk";
+
     const metadataAddress = await getMetadataAddress(splV2Address);
 
-    await program.methods
-      .createSplV2(
-        splV2Bump,
-        "SPL V2 TOKEN",
-        "SPLV2",
-        "https://arweave.net/OwXDf7SM6nCVY2cvQ4svNjtV7WBTz3plbI4obN9JNkk"
-      )
+    const tx = await program.methods
+      .createSplV2(splV2Bump, name, symbol, uri)
       .accounts({
         config: splV2Config.publicKey,
         creator: wallet.publicKey,
@@ -90,6 +90,33 @@ describe("spl-v2", () => {
       splV2Mint,
       wallet.publicKey
     );
+
+    console.log("Mint", splV2Mint.toBase58());
+    console.log("Your transaction signature", tx);
+
+    const metadata = await getMetadata(
+      anchor.getProvider().connection,
+      splV2Mint
+    );
+    console.log("Metadata", metadata);
+  });
+
+  it("UpdateSplMetadata", async () => {
+    const name = "SPL V2 Token";
+    const symbol = "SPLV2";
+    const uri =
+      "https://arweave.net/OwXDf7SM6nCVY2cvQ4svNjtV7WBTz3plbI4obN9JNkk";
+    const metadataAccountAddress = await getMetadataAddress(splV2Mint);
+
+    const tx = await program.methods
+      .updateSplV2Metadata(name, symbol, uri)
+      .accounts({
+        authority: wallet.publicKey,
+        metadata: metadataAccountAddress,
+        tokenMetadataProgram: METAPLEX_METADATA_PROGRAM_ID,
+      })
+      .rpc();
+    console.log("Your transaction signature", tx);
 
     const metadata = await getMetadata(
       anchor.getProvider().connection,
@@ -114,7 +141,7 @@ describe("spl-v2", () => {
       )
     ).amount;
 
-    await program.methods
+    const tx = await program.methods
       .swapSpl(amount)
       .accounts({
         config: splV2Config.publicKey,
@@ -126,6 +153,8 @@ describe("spl-v2", () => {
         tokenProgram: TOKEN_PROGRAM_ID,
       })
       .rpc();
+
+    console.log("Your transaction signature", tx);
 
     const postSplV1Balances = (
       await spl.getAccount(
